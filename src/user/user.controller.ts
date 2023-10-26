@@ -13,15 +13,17 @@ export class UserController {
   }
 
   @Post()
-  createUser(@Body() body: typeof UserType, @Res() res: Response) {
+  async createUser(@Body() body: typeof UserType, @Res() res: Response) {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(body.password, salt);
     body.password = hash;
-    const isDuplicate = this.userService.getUserByEmail(body.email);
-    if (isDuplicate) {
-      res.json({ message: 'User already exists' });
+    const isDuplicate = await this.userService.getUserByEmail(body.email);
+    console.log(isDuplicate);
+    if (isDuplicate === null) {
+      this.userService.createUser(body);
+      res.json({ message: 'User created successfully' });
     } else {
-      return this.userService.createUser(body);
+      res.json({ message: 'User already exists' });
     }
   }
 }
