@@ -10,7 +10,6 @@ export class AuthService {
     return user;
   }
   async signIn(body: any) {
-    console.log(body);
     return body;
   }
 }
