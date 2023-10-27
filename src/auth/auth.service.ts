@@ -9,6 +9,10 @@ export class AuthService {
     const user = await this.userModel.findOne({ email: email });
     return user;
   }
+  async validateToken(email: string) {
+    const user = await this.userModel.findOne({ email: email });
+    return user;
+  }
   async signIn(body: any) {
     return body;
   }
