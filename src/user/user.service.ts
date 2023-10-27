@@ -22,10 +22,17 @@ export class UserService {
       if (!res) {
         throw new HttpException('User not found', HttpStatus.NOT_FOUND);
       }
-      console.log(res);
       res.save();
     });
 
     return { msg: 'User updated successfully' };
+  }
+  async deleteUser(id: string) {
+    await this.userModel.findByIdAndDelete(id).then((res) => {
+      if (!res) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+    });
+    return { msg: 'User deleted successfully' };
   }
 }

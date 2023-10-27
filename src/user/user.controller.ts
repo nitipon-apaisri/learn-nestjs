@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpException,
@@ -48,5 +49,11 @@ export class UserController {
   @UseGuards(AuthGuard)
   async updateUser(@Param('id') id: string, @Body() body: any) {
     await this.userService.updateUser(id, body);
+  }
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  async deleteUser(@Param('id') id: string) {
+    await this.userService.deleteUser(id);
   }
 }
