@@ -31,12 +31,15 @@ export class UserController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createUser(@Body() body: typeof UserType) {
+    const fields = Object.keys(body);
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(body.password, salt);
     body.password = hash;
     const isDuplicate = await this.userService.getUserByEmail(body.email);
-    console.log(isDuplicate);
     if (isDuplicate === null) {
+      if (fields.length !== Object.keys(UserType).length) {
+        throw new HttpException('Missing fields', HttpStatus.BAD_REQUEST);
+      }
       return this.userService.createUser(body);
     } else {
       throw new HttpException('User already exists', HttpStatus.CONFLICT);
