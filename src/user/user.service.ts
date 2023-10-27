@@ -14,6 +14,7 @@ export class UserService {
   }
   async createUser(body: any) {
     const createdUser = new this.userModel(body);
-    return createdUser.save();
+    createdUser.save();
+    return { msg: 'User created successfully' };
   }
 }
