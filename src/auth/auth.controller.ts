@@ -16,6 +16,9 @@ export class AuthController {
   @Post()
   async singIn(@Body() body: any) {
     const user = await this.authService.findOne(body.email);
+    if (!user) {
+      throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
+    }
     const validatePassword = bcrypt.compareSync(body.password, user.password);
     if (!validatePassword) {
       throw new HttpException('Something went wrong', HttpStatus.UNAUTHORIZED);
