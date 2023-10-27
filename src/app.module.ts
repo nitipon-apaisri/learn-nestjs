@@ -10,7 +10,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { AuthMiddleware } from './middlewares/auth.middleware';
+import { LoggerMiddleware } from './middlewares/logger.middleware';
 ConfigModule.forRoot();
 @Module({
   imports: [
@@ -24,7 +24,7 @@ ConfigModule.forRoot();
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(AuthMiddleware)
-      .forRoutes({ path: 'user', method: RequestMethod.GET });
+      .apply(LoggerMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }
