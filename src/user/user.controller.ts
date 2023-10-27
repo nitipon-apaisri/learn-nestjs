@@ -6,6 +6,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -28,19 +29,24 @@ export class UserController {
   getUserByEmail(@Param('email') email: string) {
     return this.userService.getUserByEmail(email);
   }
-
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(ValidateFields)
   async createUser(@Body() body: typeof UserType) {
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(body.password, salt);
-    body.password = hash;
-    const isDuplicate = await this.userService.getUserByEmail(body.email);
+    const salt = bcrypt.genSaltSync(10); // generate salt
+    const hash = bcrypt.hashSync(body.password, salt); // generate hash from password
+    body.password = hash; // set hash as password
+    const isDuplicate = await this.userService.getUserByEmail(body.email); // check if user already exists
     if (isDuplicate === null) {
-      return this.userService.createUser(body);
+      return this.userService.createUser(body); // create user
     } else {
-      throw new HttpException('User already exists', HttpStatus.CONFLICT);
+      throw new HttpException('User already exists', HttpStatus.CONFLICT); // throw error if user already exists
     }
+  }
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  async updateUser(@Param('id') id: string, @Body() body: any) {
+    await this.userService.updateUser(id, body);
   }
 }
